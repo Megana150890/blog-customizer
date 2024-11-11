@@ -6,12 +6,18 @@ import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import {
 	ArticleStateType,
+	backgroundColors,
+	contentWidthArr,
+	fontColors,
 	fontFamilyOptions,
+	fontSizeOptions,
 	OptionType,
 } from 'src/constants/articleProps';
 
 import { Text } from 'src/ui/text';
 import { Select } from 'src/ui/select';
+import { RadioGroup } from 'src/ui/radio-group';
+import { Separator } from 'src/ui/separator';
 type ArticleParamsFormProps = {
 	currentArticleState: ArticleStateType;
 	setCurrentArticleState: (param: ArticleStateType) => void;
@@ -52,12 +58,43 @@ export const ArticleParamsForm = ({
 								Задайте параметры
 							</Text>
 						</div>
+
 						<Select
 							selected={selectState.fontFamilyOption}
 							options={fontFamilyOptions}
 							title='шрифт'
 							onChange={(param) =>
 								handleChange('fontFamilyOption', param)
+							}></Select>
+
+						<RadioGroup
+							name={'fontsize'}
+							options={fontSizeOptions}
+							selected={selectState.fontSizeOption}
+							onChange={(value) => handleChange('fontSizeOption', value)}
+							title='размер шрифта'></RadioGroup>
+						<Select
+							selected={selectState.fontColor}
+							options={fontColors}
+							title='цвет шрифта'
+							onChange={(param) => handleChange('fontColor', param)}></Select>
+
+						<Separator></Separator>
+
+						<Select
+							selected={selectState.backgroundColor}
+							options={backgroundColors}
+							title='цвет фона'
+							onChange={(param) =>
+								handleChange('backgroundColor', param)
+							}></Select>
+
+						<Select
+							selected={selectState.contentWidth}
+							options={contentWidthArr}
+							title='цвет фона'
+							onChange={(param) =>
+								handleChange('contentWidth', param)
 							}></Select>
 
 						<div className={styles.bottomContainer}>
