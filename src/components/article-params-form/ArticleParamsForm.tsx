@@ -8,6 +8,7 @@ import {
 	ArticleStateType,
 	backgroundColors,
 	contentWidthArr,
+	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
@@ -18,6 +19,7 @@ import { Text } from 'src/ui/text';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
+import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 type ArticleParamsFormProps = {
 	currentArticleState: ArticleStateType;
 	setCurrentArticleState: (param: ArticleStateType) => void;
@@ -38,6 +40,19 @@ export const ArticleParamsForm = ({
 	const handleChange = (key: keyof ArticleStateType, value: OptionType) => {
 		setSelectState({ ...selectState, [key]: value });
 	};
+
+	const resetForm = () => {
+		setSelectState(defaultArticleState);
+		setCurrentArticleState(defaultArticleState);
+	};
+
+	useOutsideClickClose({
+		isOpen,
+		rootRef,
+		onClose: () => setIsopen(false),
+		onChange: setIsopen,
+		event: 'mousedown',
+	});
 
 	return (
 		<div ref={rootRef}>
@@ -98,7 +113,12 @@ export const ArticleParamsForm = ({
 							}></Select>
 
 						<div className={styles.bottomContainer}>
-							<Button title='Сбросить' htmlType='reset' type='clear' />
+							<Button
+								title='Сбросить'
+								htmlType='reset'
+								type='clear'
+								onClick={resetForm}
+							/>
 							<Button title='Применить' htmlType='submit' type='apply' />
 						</div>
 					</form>
