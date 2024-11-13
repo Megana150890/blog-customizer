@@ -19,7 +19,7 @@ import { Text } from 'src/ui/text';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
-import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
+import { useClose } from 'src/ui/radio-group/hooks/useClose';
 type ArticleParamsFormProps = {
 	currentArticleState: ArticleStateType;
 	setCurrentArticleState: (param: ArticleStateType) => void;
@@ -29,9 +29,9 @@ export const ArticleParamsForm = ({
 	currentArticleState,
 	setCurrentArticleState,
 }: ArticleParamsFormProps) => {
-	const [isOpen, setIsopen] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const toogleForm = () => {
-		setIsopen(!isOpen);
+		setIsMenuOpen(!isMenuOpen);
 	};
 	const rootRef = useRef<HTMLDivElement>(null);
 	const [selectState, setSelectState] =
@@ -46,84 +46,81 @@ export const ArticleParamsForm = ({
 		setCurrentArticleState(defaultArticleState);
 	};
 
-	useOutsideClickClose({
-		isOpen,
-		rootRef,
-		onClose: () => setIsopen(false),
-		onChange: setIsopen,
-		event: 'mousedown',
+	const formRef = useRef<HTMLElement>(null);
+
+	useClose({
+		isOpen: isMenuOpen,
+		onClose: () => setIsMenuOpen(false),
+		rootRef: formRef,
 	});
 
 	return (
 		<div ref={rootRef}>
-			<ArrowButton isOpen={isOpen} onClick={toogleForm} />
-			{isOpen && (
-				<aside
-					className={clsx(styles.container, {
-						[styles.container_open]: isOpen,
-					})}>
-					<form
-						className={styles.form}
-						onSubmit={(e) => {
-							e.preventDefault();
-							setCurrentArticleState(selectState);
-						}}>
-						<div>
-							<Text size={31} uppercase weight={800}>
-								Задайте параметры
-							</Text>
-						</div>
+			<ArrowButton isOpen={isMenuOpen} onClick={toogleForm} />
 
-						<Select
-							selected={selectState.fontFamilyOption}
-							options={fontFamilyOptions}
-							title='шрифт'
-							onChange={(param) =>
-								handleChange('fontFamilyOption', param)
-							}></Select>
+			<aside
+				className={clsx(styles.container, {
+					[styles.container_open]: isMenuOpen,
+				})}>
+				<form
+					className={styles.form}
+					onSubmit={(e) => {
+						e.preventDefault();
+						setCurrentArticleState(selectState);
+					}}>
+					<div>
+						<Text size={31} uppercase weight={800}>
+							Задайте параметры
+						</Text>
+					</div>
 
-						<RadioGroup
-							name={'fontsize'}
-							options={fontSizeOptions}
-							selected={selectState.fontSizeOption}
-							onChange={(value) => handleChange('fontSizeOption', value)}
-							title='размер шрифта'></RadioGroup>
-						<Select
-							selected={selectState.fontColor}
-							options={fontColors}
-							title='цвет шрифта'
-							onChange={(param) => handleChange('fontColor', param)}></Select>
+					<Select
+						selected={selectState.fontFamilyOption}
+						options={fontFamilyOptions}
+						title='шрифт'
+						onChange={(param) =>
+							handleChange('fontFamilyOption', param)
+						}></Select>
 
-						<Separator></Separator>
+					<RadioGroup
+						name={'fontsize'}
+						options={fontSizeOptions}
+						selected={selectState.fontSizeOption}
+						onChange={(value) => handleChange('fontSizeOption', value)}
+						title='размер шрифта'></RadioGroup>
+					<Select
+						selected={selectState.fontColor}
+						options={fontColors}
+						title='цвет шрифта'
+						onChange={(param) => handleChange('fontColor', param)}></Select>
 
-						<Select
-							selected={selectState.backgroundColor}
-							options={backgroundColors}
-							title='цвет фона'
-							onChange={(param) =>
-								handleChange('backgroundColor', param)
-							}></Select>
+					<Separator></Separator>
 
-						<Select
-							selected={selectState.contentWidth}
-							options={contentWidthArr}
-							title='цвет фона'
-							onChange={(param) =>
-								handleChange('contentWidth', param)
-							}></Select>
+					<Select
+						selected={selectState.backgroundColor}
+						options={backgroundColors}
+						title='цвет фона'
+						onChange={(param) =>
+							handleChange('backgroundColor', param)
+						}></Select>
 
-						<div className={styles.bottomContainer}>
-							<Button
-								title='Сбросить'
-								htmlType='reset'
-								type='clear'
-								onClick={resetForm}
-							/>
-							<Button title='Применить' htmlType='submit' type='apply' />
-						</div>
-					</form>
-				</aside>
-			)}
+					<Select
+						selected={selectState.contentWidth}
+						options={contentWidthArr}
+						title='цвет фона'
+						onChange={(param) => handleChange('contentWidth', param)}></Select>
+
+					<div className={styles.bottomContainer}>
+						<Button
+							title='Сбросить'
+							htmlType='reset'
+							type='clear'
+							onClick={resetForm}
+						/>
+						<Button title='Применить' htmlType='submit' type='apply' />
+					</div>
+				</form>
+			</aside>
 		</div>
 	);
 };
