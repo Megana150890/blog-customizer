@@ -46,12 +46,10 @@ export const ArticleParamsForm = ({
 		setCurrentArticleState(defaultArticleState);
 	};
 
-	const formRef = useRef<HTMLElement>(null);
-
 	useClose({
 		isOpen: isMenuOpen,
 		onClose: () => setIsMenuOpen(false),
-		rootRef: formRef,
+		rootRef: rootRef,
 	});
 
 	return (
